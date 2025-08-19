@@ -211,7 +211,7 @@ export default {
         message: '',
       },
       amounts: [50000, 100000, 250000, 500000, 1000000],
-      paymentMethods: ['Transfer Bank', 'E-Wallet', 'QRIS'],
+      paymentMethods: ['Transfer Bank', 'QRIS'],
       loading: false,
       success: null,
       error: null,
