@@ -1,4 +1,3 @@
-
 <template>
   <section class="py-12 bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4">
@@ -132,6 +131,12 @@
           </div>
         </div>
 
+        <!-- reCAPTCHA v2 Widget -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Verifikasi</label>
+          <div class="g-recaptcha" :data-sitekey="recaptchaSiteKey"></div>
+        </div>
+
         <!-- Pesan Opsional -->
         <div>
           <label class="block text-sm font-medium mb-1">Pesan (Opsional)</label>
@@ -216,6 +221,7 @@ export default {
       success: null,
       error: null,
       showQRISModal: false,
+      recaptchaSiteKey: '6LcAOqsrAAAAAO3nW8_rsA5l5TXZOT0zCAm_5olT',
     };
   },
   computed: {
@@ -232,15 +238,39 @@ export default {
     }
   },
   mounted() {
+    console.log('Component mounted, loading reCAPTCHA v2...');
     this.prefillCampaign();
     this.loadRecaptcha();
   },
   methods: {
     loadRecaptcha() {
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js?render=6Lf8E6krAAAAAGExLFe-4EsFeyuGyTIiGvj4yOQ6';
-      script.async = true;
-      document.head.appendChild(script);
+      if (!window.grecaptcha) {
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        script.async = true;
+        script.onload = () => {
+          console.log('reCAPTCHA v2 script loaded');
+          // Ensure widget is rendered after script loads
+          if (window.grecaptcha && window.grecaptcha.render) {
+            window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
+              sitekey: this.recaptchaSiteKey,
+            });
+          }
+        };
+        script.onerror = () => {
+          console.error('Failed to load reCAPTCHA v2 script');
+          this.error = 'Gagal memuat reCAPTCHA. Silakan coba lagi nanti.';
+          this.showErrorAlert(this.error);
+        };
+        document.head.appendChild(script);
+      } else {
+        // If grecaptcha is already loaded, render the widget
+        if (window.grecaptcha.render) {
+          window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
+            sitekey: this.recaptchaSiteKey,
+          });
+        }
+      }
     },
     async prefillCampaign() {
       const campaignId = this.$route.query.campaign_id;
@@ -326,21 +356,27 @@ export default {
 
       if (!this.form.amount || this.form.amount < 10000) {
         this.error = 'Jumlah donasi minimal Rp 10.000';
-        this.showErrorAlert('Jumlah donasi minimal Rp 10.000');
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+
+      if (!window.grecaptcha) {
+        this.error = 'reCAPTCHA tidak tersedia. Silakan refresh halaman atau cek koneksi internet Anda.';
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+
+      const recaptchaResponse = window.grecaptcha.getResponse();
+      if (!recaptchaResponse) {
+        this.error = 'Silakan centang "Saya bukan robot" untuk melanjutkan.';
+        this.showErrorAlert(this.error);
         this.loading = false;
         return;
       }
 
       try {
-        // Eksekusi reCAPTCHA untuk client-side check
-        const token = await window.grecaptcha.execute('6Lf8E6krAAAAAGExLFe-4EsFeyuGyTIiGvj4yOQ6', { action: 'submit_donation' });
-        if (!token) {
-          this.error = 'Validasi reCAPTCHA gagal. Silakan coba lagi.';
-          this.showErrorAlert(this.error);
-          this.loading = false;
-          return;
-        }
-
         const formData = new FormData();
         formData.append('campaign_id', this.form.campaign_id);
         formData.append('amount', this.form.amount);
@@ -358,6 +394,7 @@ export default {
           this.success = response.data.message || 'Donasi berhasil dikirim!';
           this.showSuccessAlert(this.success);
           this.resetForm();
+          window.grecaptcha.reset(); // Reset reCAPTCHA after successful submission
         } else {
           this.error = response.data.message || 'Gagal mengirim donasi';
           this.showErrorAlert(this.error);
@@ -392,5 +429,9 @@ input:focus, textarea:focus {
   outline: none;
   border-color: #22c55e;
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+}
+.g-recaptcha {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 </style>
