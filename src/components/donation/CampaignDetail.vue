@@ -88,7 +88,7 @@ export default {
       this.error = null;
       try {
         const campaignId = this.$route.params.id;
-        const response = await axios.get(`http://127.0.0.1:8001/api/donation/${campaignId}`);
+        const response = await axios.get(`https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`);
         if (response.data.status === 'success') {
           const data = response.data.data;
 

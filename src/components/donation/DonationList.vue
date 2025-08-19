@@ -71,7 +71,7 @@ export default {
     // Kalo ada endpoint API daftar donasi, uncomment dan ganti URL
     
     this.loading = true;
-    axios.get('http://127.0.0.1:8001/api/donations/list').then(response => {
+    axios.get('https://masjid.uika-bogor.ac.id/backend/api/donations/list').then(response => {
       if (response.data.status === 'success') {
         this.donations = response.data.data;
       } else {

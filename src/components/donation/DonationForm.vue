@@ -251,7 +251,7 @@ export default {
       }
 
       try {
-        const response = await axios.get(`http://127.0.0.1:8001/api/donation/${campaignId}`);
+        const response = await axios.get(`https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`);
         if (response.data.status === 'success') {
           const data = response.data.data;
           this.campaign.id = data.id;
@@ -350,7 +350,7 @@ export default {
         formData.append('proof_image', this.form.proof_image);
         if (this.form.message) formData.append('message', this.form.message);
 
-        const response = await axios.post('http://127.0.0.1:8001/api/donations', formData, {
+        const response = await axios.post('https://masjid.uika-bogor.ac.id/backend/api/donations', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 

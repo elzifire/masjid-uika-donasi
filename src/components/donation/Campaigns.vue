@@ -13,7 +13,7 @@
           <div class="relative h-64 md:h-72">
             <img 
               v-if="campaign.image" 
-              :src="campaign.image.startsWith('http') ? campaign.image : `http://127.0.0.1:8001${campaign.image}`" 
+              :src="campaign.image.startsWith('http') ? campaign.image : `https://masjid.uika-bogor.ac.id/backend/${campaign.image}`" 
               alt="Gambar Kampanye" 
               class="w-full h-full object-cover"
             />
@@ -79,13 +79,13 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const response = await axios.get('http://127.0.0.1:8001/api/homepage/donations');
+        const response = await axios.get('https://masjid.uika-bogor.ac.id/backend/api/homepage/donations');
         if (response.data.status === 'success') {
           this.campaigns = response.data.data.map(campaign => ({
             ...campaign,
             tags: campaign.category ? [campaign.category] : [],
             description: campaign.description || campaign.title,
-            image: campaign.image?.startsWith('http') ? campaign.image : campaign.image ? `http://127.0.0.1:8001${campaign.image}` : null
+            image: campaign.image?.startsWith('http') ? campaign.image : campaign.image ? `https://masjid.uika-bogor.ac.id/backend/${campaign.image}` : null
           }));
         } else {
           this.error = 'Gagal memuat kampanye';

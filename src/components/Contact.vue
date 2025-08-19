@@ -8,9 +8,9 @@
         <!-- Informasi Kontak -->
         <div class="bg-white p-6 rounded-lg shadow">
           <h3 class="text-xl font-semibold mb-4">Informasi Kontak</h3>
-          <p class="mb-2"><strong>Alamat:</strong> Jl. Kebaikan No. 123, Jakarta Selatan, Indonesia</p>
-          <p class="mb-2"><strong>Email:</strong> info@masjiduika.id</p>
-          <p class="mb-2"><strong>Telepon:</strong> +62 21 1234 5678</p>
+          <p class="mb-2"><strong>Alamat:</strong> l. Sholeh Iskandar No.KM.2, RT.01/RW.10, Kedungbadak, Kec. Tanah Sereal, Kota Bogor, Jawa Barat 16164</p>
+          <!-- <p class="mb-2"><strong>Email:</strong> </p> -->
+          <p class="mb-2"><strong>Telepon:</strong> (0251) 8356884</p>
         </div>
 
         <!-- Form Kirim Pesan -->

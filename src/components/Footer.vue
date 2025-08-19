@@ -86,7 +86,7 @@ export default {
     async fetchCategories() {
       this.loadingCategories = true;
       try {
-        const response = await axios.get('http://127.0.0.1:8001/api/categories/donations');
+        const response = await axios.get('https://masjid.uika-bogor.ac.id/backend/api/categories/donations');
         if (response.data.status === 'success') {
           this.categories = response.data.data;
         } else {

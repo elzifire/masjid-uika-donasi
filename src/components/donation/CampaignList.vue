@@ -110,7 +110,7 @@ export default {
       currentPage: 1,
       lastPage: 1,
       perPage: 6,
-      baseUrl: "http://127.0.0.1:8001", // base URL backend
+      baseUrl: "https://masjid.uika-bogor.ac.id/backend", // base URL backend
     };
   },
   computed: {
@@ -152,7 +152,7 @@ export default {
     async fetchCategories() {
       try {
         const res = await axios.get(
-          "http://127.0.0.1:8001/api/categories/donations"
+          "https://masjid.uika-bogor.ac.id/backend/api/categories/donations"
         );
         if (res.data.status === "success") this.categories = res.data.data;
       } catch (error) {
@@ -166,7 +166,7 @@ export default {
         if (this.selectedCategory) params.category = this.selectedCategory;
 
         const res = await axios.get(
-          "http://127.0.0.1:8001/api/donations",
+          "https://masjid.uika-bogor.ac.id/backend/api/donations",
           { params }
         );
         if (res.data.status === "success") {
