@@ -11,7 +11,7 @@
           <div class="w-full h-96 overflow-hidden rounded-lg">
             <img 
               v-if="campaign.image" 
-              :src="campaign.image.startsWith('http') ? campaign.image : `http://127.0.0.1:8001${campaign.image}`" 
+              :src="campaign.image.startsWith('http') ? campaign.image : `https://masjid.uika-bogor.ac.id/backend/${campaign.image}`" 
               alt="Gambar Kampanye" 
               class="w-full h-full object-cover transition-transform hover:scale-105"
             />
