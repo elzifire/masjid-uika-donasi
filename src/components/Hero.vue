@@ -1,7 +1,7 @@
 <template>
   <section 
     class="relative bg-cover bg-center h-[800px]" 
-    style="background-image: url('../../public/images/hero.jpg');"
+    style="background-image: url('/donasi-staging/images/hero.jpg');"
   >
     <!-- Overlay gelap supaya teks terbaca -->
     <div class="absolute inset-0 bg-black bg-opacity-50"></div>
