@@ -46,7 +46,7 @@
               {{ campaign.category }}
             </span>
             <h3 class="text-lg font-semibold mt-1 truncate">{{ campaign.title }}</h3>
-            <p class="text-gray-600 text-sm mt-1 truncate">{{ campaign.title }}</p>
+            <!-- <p class="text-gray-600 text-sm mt-1 truncate">{{ campaign.title }}</p> -->
 
             <div class="mt-4">
               <p class="text-sm font-medium">

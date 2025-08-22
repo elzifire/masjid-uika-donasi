@@ -1,16 +1,92 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MASJID UIKA</title>
-  <!-- Tailwind CSS CDN -->
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Google Font (Quicksand) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+
+  <!-- Custom Global Style -->
+  <style>
+    :root {
+      --color-primary: #4CAF50 !important;
+      /* Hijau utama */
+      --color-secondary: #2E7D32 !important;
+      /* Hijau tua */
+      --color-accent: #81C784 !important;
+      /* Hijau terang */
+      --color-neutral: #F5F5F5 !important;
+      /* Abu muda */
+      --color-text: #212121 !important;
+      /* Teks utama */
+      --color-muted: #757575 !important;
+      /* Teks sekunder */
+      --font-primary: 'Quicksand', sans-serif;
+      --font-secondary: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-primary) !important;
+    }
+
+    body {
+      font-family: var(--font-primary) !important;
+      color: var(--color-text) !important;
+      background-color: var(--color-neutral) !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 700 !important;
+      color: var(--color-secondary) !important;
+    }
+
+    p {
+      color: var(--color-muted) !important;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary) !important;
+      color: #fff !important;
+      padding: 0.5rem 1rem !important;
+      border-radius: 0.5rem !important;
+      font-weight: 600 !important;
+      transition: background-color 0.3s ease !important;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-secondary) !important;
+    }
+
+    .btn-accent {
+      background-color: var(--color-accent) !important;
+      color: #fff !important;
+    }
+  </style>
 </head>
+
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 </body>
+
 </html>

@@ -14,7 +14,7 @@
           <input 
             type="text" 
             class="w-full border rounded p-2 bg-gray-100 cursor-not-allowed" 
-            :value="campaign.title" 
+            :value="campaign.title || 'Memuat kampanye...'" 
             readonly
           />
         </div>
@@ -148,7 +148,7 @@
           type="button"
           @click="submitDonation"
           class="bg-green-600 text-white px-6 py-3 rounded w-full hover:bg-green-700 font-medium transition-colors"
-          :disabled="loading"
+          :disabled="loading || !campaign.id"
         >
           {{ loading ? 'Mengirim...' : 'Lanjutkan Donasi' }}
         </button>
@@ -160,33 +160,16 @@
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-bold text-green-800">Scan Kode QRIS</h3>
             <button @click="showQRISModal = false" class="text-gray-600 hover:text-gray-800">
-              <i class="fas fa-times text-xl"></i>
+              <i class="fas fa-times text-lg"></i>
             </button>
           </div>
-          <img
-            src="/images/qris.jpg"
-            alt="QRIS Code"
-            class="w-full max-w-xs mx-auto rounded cursor-pointer hover:scale-105 transition-transform"
+          <img :src="campaign.file_qr || '/images/qris.jpg'" alt="QRIS Code" class="w-full max-w-xs mx-auto" />
+          <button
             @click="downloadQRIS"
-          />
-          <p class="text-xs text-gray-600 italic text-center mt-2">
-            Klik gambar untuk memperbesar atau unduh kode QRIS di bawah.
-          </p>
-          <div class="flex justify-center gap-4 mt-4">
-            <a
-              href="/images/qris.jpg"
-              download="qris.jpg"
-              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
-              Unduh QRIS
-            </a>
-            <button
-              @click="showQRISModal = false"
-              class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-            >
-              Tutup
-            </button>
-          </div>
+            class="mt-4 bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700 font-medium transition-colors"
+          >
+            Unduh QRIS
+          </button>
         </div>
       </div>
     </div>
@@ -203,6 +186,7 @@ export default {
       campaign: {
         id: null,
         title: '',
+        file_qr: null,
       },
       form: {
         campaign_id: null,
@@ -215,7 +199,7 @@ export default {
         paymentMethod: 'Transfer Bank',
         message: '',
       },
-      amounts: [50000, 100000, 250000, 500000, 1000000],
+      amounts: [50000, 100000, 200000, 500000, 1000000],
       paymentMethods: ['Transfer Bank', 'QRIS'],
       loading: false,
       success: null,
@@ -234,8 +218,8 @@ export default {
         const cleaned = value.replace(/[^0-9]/g, '');
         this.form.amount = cleaned ? parseInt(cleaned, 10) : '';
         this.form.customAmount = cleaned;
-      }
-    }
+      },
+    },
   },
   mounted() {
     console.log('Component mounted, loading reCAPTCHA v2...');
@@ -250,7 +234,6 @@ export default {
         script.async = true;
         script.onload = () => {
           console.log('reCAPTCHA v2 script loaded');
-          // Ensure widget is rendered after script loads
           if (window.grecaptcha && window.grecaptcha.render) {
             window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
               sitekey: this.recaptchaSiteKey,
@@ -264,7 +247,6 @@ export default {
         };
         document.head.appendChild(script);
       } else {
-        // If grecaptcha is already loaded, render the widget
         if (window.grecaptcha.render) {
           window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
             sitekey: this.recaptchaSiteKey,
@@ -274,30 +256,44 @@ export default {
     },
     async prefillCampaign() {
       const campaignId = this.$route.query.campaign_id;
+      console.log('Campaign ID from query:', campaignId);
+
       if (!campaignId) {
-        this.error = 'Kampanye tidak ditemukan';
-        this.showErrorAlert('Kampanye tidak ditemukan');
+        this.error = 'Kampanye tidak ditemukan. Silakan pilih kampanye yang valid.';
+        this.showErrorAlert(this.error);
         return;
       }
 
       try {
         const response = await axios.get(`https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`);
-        if (response.data.status === 'success') {
+        console.log('API response:', response.data);
+        if (response.data.status === 'success' && response.data.data) {
           const data = response.data.data;
-          this.campaign.id = data.id;
-          this.campaign.title = data.title;
+          this.campaign = {
+            id: data.id,
+            title: data.title,
+            file_qr: data.file_qr || null,
+          };
           this.form.campaign_id = data.id;
+          console.log('Campaign loaded:', this.campaign);
         } else {
-          this.error = 'Kampanye tidak ditemukan';
-          this.showErrorAlert('Kampanye tidak ditemukan');
+          this.error = 'Kampanye tidak ditemukan atau data tidak valid.';
+          this.showErrorAlert(this.error);
         }
       } catch (err) {
-        this.error = 'Gagal memuat kampanye: ' + err.message;
-        this.showErrorAlert('Gagal memuat kampanye: ' + err.message);
+        console.error('Error fetching campaign:', err);
+        this.error = 'Gagal memuat kampanye: ' + (err.response?.data?.message || err.message);
+        this.showErrorAlert(this.error);
       }
     },
     handleFileUpload(event) {
-      this.form.proof_image = event.target.files[0];
+      const file = event.target.files[0];
+      if (file && ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'].includes(file.type)) {
+        this.form.proof_image = file;
+      } else {
+        this.error = 'File harus berupa gambar (jpeg, png, jpg, gif).';
+        this.showErrorAlert(this.error);
+      }
     },
     setAmount(amount) {
       this.form.amount = amount;
@@ -313,7 +309,7 @@ export default {
           title: 'Berhasil!',
           text: 'Nomor rekening berhasil disalin!',
           timer: 1500,
-          showConfirmButton: false
+          showConfirmButton: false,
         });
       }).catch(() => {
         Swal.fire({
@@ -321,7 +317,7 @@ export default {
           title: 'Gagal!',
           text: 'Gagal menyalin nomor rekening',
           timer: 1500,
-          showConfirmButton: false
+          showConfirmButton: false,
         });
       });
     },
@@ -331,7 +327,7 @@ export default {
         title: 'Sukses!',
         text: message,
         confirmButtonColor: '#22c55e',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       });
     },
     showErrorAlert(message) {
@@ -340,12 +336,12 @@ export default {
         title: 'Gagal!',
         text: message,
         confirmButtonColor: '#22c55e',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       });
     },
     downloadQRIS() {
       const link = document.createElement('a');
-      link.href = '/images/qris.jpg';
+      link.href = this.campaign.file_qr || '/images/qris.jpg';
       link.download = 'qris.jpg';
       link.click();
     },
@@ -354,6 +350,15 @@ export default {
       this.success = null;
       this.error = null;
 
+      // Validasi campaign_id
+      if (!this.form.campaign_id || !this.campaign.id) {
+        this.error = 'Kampanye tidak valid. Silakan pilih kampanye terlebih dahulu.';
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+
+      // Validasi jumlah donasi
       if (!this.form.amount || this.form.amount < 10000) {
         this.error = 'Jumlah donasi minimal Rp 10.000';
         this.showErrorAlert(this.error);
@@ -361,6 +366,29 @@ export default {
         return;
       }
 
+      // Validasi bukti transfer
+      if (!this.form.proof_image) {
+        this.error = 'Bukti transfer wajib diunggah.';
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+
+      // Validasi informasi pribadi untuk donasi umum
+      if (this.form.showName === 'show' && !this.form.name) {
+        this.error = 'Nama wajib diisi jika tidak anonim.';
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+      if (!this.form.phone_number) {
+        this.error = 'Nomor telepon wajib diisi.';
+        this.showErrorAlert(this.error);
+        this.loading = false;
+        return;
+      }
+
+      // Validasi reCAPTCHA
       if (!window.grecaptcha) {
         this.error = 'reCAPTCHA tidak tersedia. Silakan refresh halaman atau cek koneksi internet Anda.';
         this.showErrorAlert(this.error);
@@ -380,11 +408,13 @@ export default {
         const formData = new FormData();
         formData.append('campaign_id', this.form.campaign_id);
         formData.append('amount', this.form.amount);
-        formData.append('name', this.form.name);
+        formData.append('name', this.form.showName === 'hide' ? '' : this.form.name);
         formData.append('phone_number', this.form.phone_number);
         formData.append('is_anonymous', this.form.showName === 'hide' ? 1 : 0);
         formData.append('proof_image', this.form.proof_image);
         if (this.form.message) formData.append('message', this.form.message);
+
+        console.log('Submitting donation with campaign_id:', this.form.campaign_id);
 
         const response = await axios.post('https://masjid.uika-bogor.ac.id/backend/api/donations', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -394,12 +424,13 @@ export default {
           this.success = response.data.message || 'Donasi berhasil dikirim!';
           this.showSuccessAlert(this.success);
           this.resetForm();
-          window.grecaptcha.reset(); // Reset reCAPTCHA after successful submission
+          window.grecaptcha.reset();
         } else {
           this.error = response.data.message || 'Gagal mengirim donasi';
           this.showErrorAlert(this.error);
         }
       } catch (err) {
+        console.error('Error submitting donation:', err);
         this.error = err.response?.data?.message || 'Gagal mengirim donasi: ' + err.message;
         this.showErrorAlert(this.error);
       } finally {
@@ -425,7 +456,8 @@ export default {
 </script>
 
 <style scoped>
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: #22c55e;
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);

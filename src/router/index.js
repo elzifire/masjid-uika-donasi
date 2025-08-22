@@ -15,6 +15,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory('/donasi-staging/'),
+  // history: createWebHistory(),
   routes,
 });
 

@@ -40,47 +40,6 @@ export default {
   mounted() {
     const campaignId = this.$route.params.id;
     // Contoh data statis, ganti dengan API asli
-    const campaigns = [
-      {
-        id: 1,
-        image: 'https://via.placeholder.com/300x200',
-        urgent: true,
-        tags: ['Pendidikan', 'Anak-anak'],
-        title: 'Bangun Perpustakaan untuk Desa Terpencil',
-        description: 'Membantu anak-anak di desa terpencil mendapatkan akses pendidikan melalui perpustakaan yang layak.',
-        raised: 45000000,
-        goal: 75000000,
-        progress: 60,
-        donors: 320,
-        daysLeft: 15,
-      },
-      {
-        id: 2,
-        image: 'https://via.placeholder.com/300x200',
-        urgent: false,
-        tags: ['Kesehatan', 'Lansia'],
-        title: 'Pengobatan Gratis untuk Lansia',
-        description: 'Menyediakan layanan kesehatan dan pengobatan gratis untuk lansia yang kurang mampu di daerah pedesaan.',
-        raised: 32500000,
-        goal: 50000000,
-        progress: 65,
-        donors: 245,
-        daysLeft: 20,
-      },
-      {
-        id: 3,
-        image: 'https://via.placeholder.com/300x200',
-        urgent: true,
-        tags: ['Bencana Alam', 'Bantuan'],
-        title: 'Bantuan Korban Banjir Bandang',
-        description: 'Menyalurkan bantuan logistik dan kebutuhan pokok untuk korban banjir bandang di Kalimantan Selatan.',
-        raised: 87500000,
-        goal: 100000000,
-        progress: 87.5,
-        donors: 512,
-        daysLeft: 5,
-      },
-    ];
     this.campaign = campaigns.find(c => c.id == campaignId);
     // Contoh panggilan Axios (ganti dengan API asli)
     axios.get(`https://api.example.com/campaigns/${campaignId}`).then(response => {
