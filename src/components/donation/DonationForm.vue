@@ -5,16 +5,20 @@
 
       <div class="max-w-lg mx-auto space-y-6 bg-white p-6 rounded shadow">
         <!-- Success & Error Message -->
-        <div v-if="success" class="text-green-600 text-center font-medium">{{ success }}</div>
-        <div v-if="error" class="text-red-600 text-center font-medium">{{ error }}</div>
+        <div v-if="success" class="text-green-600 text-center font-medium">
+          {{ success }}
+        </div>
+        <div v-if="error" class="text-red-600 text-center font-medium">
+          {{ error }}
+        </div>
 
         <!-- Pilih Kampanye (Readonly / Prefill) -->
         <div>
           <label class="block text-sm font-medium mb-1">Kampanye</label>
-          <input 
-            type="text" 
-            class="w-full border rounded p-2 bg-gray-100 cursor-not-allowed" 
-            :value="campaign.title || 'Memuat kampanye...'" 
+          <input
+            type="text"
+            class="w-full border rounded p-2 bg-gray-100 cursor-not-allowed"
+            :value="campaign.title || 'Memuat kampanye...'"
             readonly
           />
         </div>
@@ -31,7 +35,7 @@
               class="border rounded px-4 py-2"
               :class="{ 'bg-green-600 text-white': form.amount === amount }"
             >
-              Rp {{ amount.toLocaleString('id-ID') }}
+              Rp {{ amount.toLocaleString("id-ID") }}
             </button>
           </div>
           <input
@@ -45,9 +49,28 @@
 
         <!-- Informasi Pribadi -->
         <div>
-          <label class="block text-sm font-medium mb-1">Informasi Pribadi</label>
-          <input v-model="form.name" type="text" placeholder="Nama" class="w-full border rounded p-2 mb-2" />
-          <input v-model="form.phone_number" type="tel" placeholder="Nomor Telepon" class="w-full border rounded p-2 mb-2" />
+          <label class="block text-sm font-medium mb-1"
+            >Informasi Pribadi</label
+          >
+
+          <!-- Input nama hanya muncul kalau pilih show -->
+          <input
+            v-if="form.showName === 'show'"
+            v-model="form.name"
+            type="text"
+            placeholder="Nama"
+            class="w-full border rounded p-2 mb-2"
+          />
+
+          <!-- Input telepon tetap -->
+          <input
+            v-model="form.phone_number"
+            type="tel"
+            placeholder="Nomor Telepon"
+            class="w-full border rounded p-2 mb-2"
+          />
+
+          <!-- Radio pilihan -->
           <div class="flex items-center gap-4 mt-2">
             <label class="flex items-center gap-2">
               <input v-model="form.showName" type="radio" value="show" />
@@ -63,12 +86,19 @@
         <!-- Bukti Transfer -->
         <div>
           <label class="block text-sm font-medium mb-1">Bukti Transfer</label>
-          <input type="file" accept="image/*" @change="handleFileUpload" class="w-full border rounded p-2" />
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleFileUpload"
+            class="w-full border rounded p-2"
+          />
         </div>
 
         <!-- Metode Pembayaran -->
         <div>
-          <label class="block text-sm font-medium mb-1">Metode Pembayaran</label>
+          <label class="block text-sm font-medium mb-1"
+            >Metode Pembayaran</label
+          >
           <div class="flex flex-wrap gap-2 mb-4">
             <button
               type="button"
@@ -76,26 +106,40 @@
               :key="method"
               @click="form.paymentMethod = method"
               class="border rounded px-4 py-2"
-              :class="{ 'bg-green-600 text-white': form.paymentMethod === method }"
+              :class="{
+                'bg-green-600 text-white': form.paymentMethod === method,
+              }"
             >
               {{ method }}
             </button>
           </div>
 
           <!-- BankInfo untuk Transfer Bank -->
-          <div v-if="form.paymentMethod === 'Transfer Bank'" class="bg-teal-50 rounded-lg p-4 border border-teal-200 mb-4">
+          <div
+            v-if="form.paymentMethod === 'Transfer Bank'"
+            class="bg-teal-50 rounded-lg p-4 border border-teal-200 mb-4"
+          >
             <div class="flex items-center mb-3">
               <i class="fas fa-wallet text-green-800 text-xl mr-2"></i>
-              <span class="text-lg font-bold text-green-800">Silahkan transfer ke:</span>
+              <span class="text-lg font-bold text-green-800"
+                >Silahkan transfer ke:</span
+              >
             </div>
             <div class="mb-3">
               <div class="flex items-center mb-2">
                 <i class="fas fa-credit-card text-gray-600 text-lg mr-2"></i>
                 <div class="flex-1">
-                  <div class="text-sm font-semibold text-gray-800">A/n Masjid Ibn Khaldun UIKA</div>
+                  <div class="text-sm font-semibold text-gray-800">
+                    A/n Masjid Ibn Khaldun UIKA
+                  </div>
                   <div class="flex items-center">
-                    <span class="text-sm text-gray-600 mr-2">BSI 7182-8454-28</span>
-                    <button @click="copyToClipboard('7182845428')" class="text-green-800 hover:text-green-600">
+                    <span class="text-sm text-gray-600 mr-2"
+                      >BSI 7182-8454-28</span
+                    >
+                    <button
+                      @click="copyToClipboard('7182845428')"
+                      class="text-green-800 hover:text-green-600"
+                    >
                       <i class="fas fa-copy text-lg"></i>
                     </button>
                   </div>
@@ -104,10 +148,17 @@
               <div class="flex items-center">
                 <i class="fas fa-credit-card text-gray-600 text-lg mr-2"></i>
                 <div class="flex-1">
-                  <div class="text-sm font-semibold text-gray-800">A/n Masjid Ibn Khaldun Muslimah Center</div>
+                  <div class="text-sm font-semibold text-gray-800">
+                    A/n Masjid Ibn Khaldun Muslimah Center
+                  </div>
                   <div class="flex items-center">
-                    <span class="text-sm text-gray-600 mr-2">BSI 7307-9787-97</span>
-                    <button @click="copyToClipboard('7307978797')" class="text-green-800 hover:text-green-600">
+                    <span class="text-sm text-gray-600 mr-2"
+                      >BSI 7307-9787-97</span
+                    >
+                    <button
+                      @click="copyToClipboard('7307978797')"
+                      class="text-green-800 hover:text-green-600"
+                    >
                       <i class="fas fa-copy text-lg"></i>
                     </button>
                   </div>
@@ -115,7 +166,8 @@
               </div>
             </div>
             <p class="text-xs text-gray-600 italic text-center">
-              Pastikan Anda mentransfer ke salah satu rekening di atas dan menyertakan bukti pembayaran.
+              Pastikan Anda mentransfer ke salah satu rekening di atas dan
+              menyertakan bukti pembayaran.
             </p>
           </div>
 
@@ -126,7 +178,9 @@
               class="flex items-center justify-center bg-teal-50 rounded-lg p-4 border border-teal-200 hover:bg-teal-100 transition"
             >
               <i class="fas fa-qrcode text-green-800 text-xl mr-2"></i>
-              <span class="text-sm font-semibold text-green-800">Klik untuk melihat kode QRIS</span>
+              <span class="text-sm font-semibold text-green-800"
+                >Klik untuk melihat kode QRIS</span
+              >
             </button>
           </div>
         </div>
@@ -140,7 +194,10 @@
         <!-- Pesan Opsional -->
         <div>
           <label class="block text-sm font-medium mb-1">Pesan (Opsional)</label>
-          <textarea v-model="form.message" class="w-full border rounded p-2"></textarea>
+          <textarea
+            v-model="form.message"
+            class="w-full border rounded p-2"
+          ></textarea>
         </div>
 
         <!-- Submit -->
@@ -150,20 +207,30 @@
           class="bg-green-600 text-white px-6 py-3 rounded w-full hover:bg-green-700 font-medium transition-colors"
           :disabled="loading || !campaign.id"
         >
-          {{ loading ? 'Mengirim...' : 'Lanjutkan Donasi' }}
+          {{ loading ? "Mengirim..." : "Kirim Donasi" }}
         </button>
       </div>
 
       <!-- QRIS Modal -->
-      <div v-if="showQRISModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div
+        v-if="showQRISModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
         <div class="bg-white rounded-lg p-6 max-w-md w-full">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-bold text-green-800">Scan Kode QRIS</h3>
-            <button @click="showQRISModal = false" class="text-gray-600 hover:text-gray-800">
+            <button
+              @click="showQRISModal = false"
+              class="text-gray-600 hover:text-gray-800"
+            >
               <i class="fas fa-times text-lg"></i>
             </button>
           </div>
-          <img :src="campaign.file_qr || '/images/qris.jpg'" alt="QRIS Code" class="w-full max-w-xs mx-auto" />
+          <img
+            :src="campaign.file_qr || '/images/qris.jpg'"
+            alt="QRIS Code"
+            class="w-full max-w-xs mx-auto"
+          />
           <button
             @click="downloadQRIS"
             class="mt-4 bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700 font-medium transition-colors"
@@ -177,78 +244,81 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
       campaign: {
         id: null,
-        title: '',
+        title: "",
         file_qr: null,
       },
       form: {
         campaign_id: null,
         amount: 50000,
-        customAmount: '',
-        name: '',
-        phone_number: '',
-        showName: 'show',
+        customAmount: "",
+        name: "",
+        phone_number: "",
+        showName: "show",
         proof_image: null,
-        paymentMethod: 'Transfer Bank',
-        message: '',
+        paymentMethod: "Transfer Bank",
+        message: "",
       },
       amounts: [50000, 100000, 200000, 500000, 1000000],
-      paymentMethods: ['Transfer Bank', 'QRIS'],
+      paymentMethods: ["Transfer Bank", "QRIS"],
       loading: false,
       success: null,
       error: null,
       showQRISModal: false,
-      recaptchaSiteKey: '6LcAOqsrAAAAAO3nW8_rsA5l5TXZOT0zCAm_5olT',
+      recaptchaSiteKey: "6LcAOqsrAAAAAO3nW8_rsA5l5TXZOT0zCAm_5olT",
     };
   },
   computed: {
     formattedAmount: {
       get() {
-        if (!this.form.amount) return '';
-        return this.form.amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }).replace('IDR', '').trim();
+        if (!this.form.amount) return "";
+        return this.form.amount
+          .toLocaleString("id-ID", { style: "currency", currency: "IDR" })
+          .replace("IDR", "")
+          .trim();
       },
       set(value) {
-        const cleaned = value.replace(/[^0-9]/g, '');
-        this.form.amount = cleaned ? parseInt(cleaned, 10) : '';
+        const cleaned = value.replace(/[^0-9]/g, "");
+        this.form.amount = cleaned ? parseInt(cleaned, 10) : "";
         this.form.customAmount = cleaned;
       },
     },
   },
   mounted() {
-    console.log('Component mounted, loading reCAPTCHA v2...');
+    console.log("Component mounted, loading reCAPTCHA v2...");
     this.prefillCampaign();
     this.loadRecaptcha();
   },
   methods: {
     loadRecaptcha() {
       if (!window.grecaptcha) {
-        const script = document.createElement('script');
-        script.src = 'https://www.google.com/recaptcha/api.js';
+        const script = document.createElement("script");
+        script.src = "https://www.google.com/recaptcha/api.js";
         script.async = true;
         script.onload = () => {
-          console.log('reCAPTCHA v2 script loaded');
+          console.log("reCAPTCHA v2 script loaded");
           if (window.grecaptcha && window.grecaptcha.render) {
-            window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
+            window.grecaptcha.render(document.querySelector(".g-recaptcha"), {
               sitekey: this.recaptchaSiteKey,
             });
           }
         };
         script.onerror = () => {
-          console.error('Failed to load reCAPTCHA v2 script');
-          this.error = 'Gagal memuat reCAPTCHA. Silakan coba lagi nanti.';
+          console.error("Failed to load reCAPTCHA v2 script");
+          this.error = "Gagal memuat reCAPTCHA. Silakan coba lagi nanti.";
           this.showErrorAlert(this.error);
         };
         document.head.appendChild(script);
       } else {
         if (window.grecaptcha.render) {
-          window.grecaptcha.render(document.querySelector('.g-recaptcha'), {
+          window.grecaptcha.render(document.querySelector(".g-recaptcha"), {
             sitekey: this.recaptchaSiteKey,
           });
         }
@@ -256,18 +326,21 @@ export default {
     },
     async prefillCampaign() {
       const campaignId = this.$route.query.campaign_id;
-      console.log('Campaign ID from query:', campaignId);
+      console.log("Campaign ID from query:", campaignId);
 
       if (!campaignId) {
-        this.error = 'Kampanye tidak ditemukan. Silakan pilih kampanye yang valid.';
+        this.error =
+          "Kampanye tidak ditemukan. Silakan pilih kampanye yang valid.";
         this.showErrorAlert(this.error);
         return;
       }
 
       try {
-        const response = await axios.get(`https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`);
-        console.log('API response:', response.data);
-        if (response.data.status === 'success' && response.data.data) {
+        const response = await axios.get(
+          `https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`
+        );
+        console.log("API response:", response.data);
+        if (response.data.status === "success" && response.data.data) {
           const data = response.data.data;
           this.campaign = {
             id: data.id,
@@ -275,74 +348,84 @@ export default {
             file_qr: data.file_qr || null,
           };
           this.form.campaign_id = data.id;
-          console.log('Campaign loaded:', this.campaign);
+          console.log("Campaign loaded:", this.campaign);
         } else {
-          this.error = 'Kampanye tidak ditemukan atau data tidak valid.';
+          this.error = "Kampanye tidak ditemukan atau data tidak valid.";
           this.showErrorAlert(this.error);
         }
       } catch (err) {
-        console.error('Error fetching campaign:', err);
-        this.error = 'Gagal memuat kampanye: ' + (err.response?.data?.message || err.message);
+        console.error("Error fetching campaign:", err);
+        this.error =
+          "Gagal memuat kampanye: " +
+          (err.response?.data?.message || err.message);
         this.showErrorAlert(this.error);
       }
     },
     handleFileUpload(event) {
       const file = event.target.files[0];
-      if (file && ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'].includes(file.type)) {
+      if (
+        file &&
+        ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(
+          file.type
+        )
+      ) {
         this.form.proof_image = file;
       } else {
-        this.error = 'File harus berupa gambar (jpeg, png, jpg, gif).';
+        this.error = "File harus berupa gambar (jpeg, png, jpg, gif).";
         this.showErrorAlert(this.error);
       }
     },
     setAmount(amount) {
       this.form.amount = amount;
-      this.form.customAmount = '';
+      this.form.customAmount = "";
     },
     updateAmount(event) {
       this.formattedAmount = event.target.value;
     },
     copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Berhasil!',
-          text: 'Nomor rekening berhasil disalin!',
-          timer: 1500,
-          showConfirmButton: false,
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil!",
+            text: "Nomor rekening berhasil disalin!",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal!",
+            text: "Gagal menyalin nomor rekening",
+            timer: 1500,
+            showConfirmButton: false,
+          });
         });
-      }).catch(() => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal!',
-          text: 'Gagal menyalin nomor rekening',
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      });
     },
     showSuccessAlert(message) {
       Swal.fire({
-        icon: 'success',
-        title: 'Sukses!',
+        icon: "success",
+        title: "Sukses!",
         text: message,
-        confirmButtonColor: '#22c55e',
-        confirmButtonText: 'OK',
+        confirmButtonColor: "#22c55e",
+        confirmButtonText: "OK",
       });
     },
     showErrorAlert(message) {
       Swal.fire({
-        icon: 'error',
-        title: 'Gagal!',
+        icon: "error",
+        title: "Gagal!",
         text: message,
-        confirmButtonColor: '#22c55e',
-        confirmButtonText: 'OK',
+        confirmButtonColor: "#22c55e",
+        confirmButtonText: "OK",
       });
     },
     downloadQRIS() {
-      const link = document.createElement('a');
-      link.href = this.campaign.file_qr || '/images/qris.jpg';
-      link.download = 'qris.jpg';
+      const link = document.createElement("a");
+      link.href = this.campaign.file_qr || "/images/qris.jpg";
+      link.download = "qris.jpg";
       link.click();
     },
     async submitDonation() {
@@ -352,7 +435,8 @@ export default {
 
       // Validasi campaign_id
       if (!this.form.campaign_id || !this.campaign.id) {
-        this.error = 'Kampanye tidak valid. Silakan pilih kampanye terlebih dahulu.';
+        this.error =
+          "Kampanye tidak valid. Silakan pilih kampanye terlebih dahulu.";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
@@ -360,7 +444,7 @@ export default {
 
       // Validasi jumlah donasi
       if (!this.form.amount || this.form.amount < 10000) {
-        this.error = 'Jumlah donasi minimal Rp 10.000';
+        this.error = "Jumlah donasi minimal Rp 10.000";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
@@ -368,21 +452,21 @@ export default {
 
       // Validasi bukti transfer
       if (!this.form.proof_image) {
-        this.error = 'Bukti transfer wajib diunggah.';
+        this.error = "Bukti transfer wajib diunggah.";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
       }
 
       // Validasi informasi pribadi untuk donasi umum
-      if (this.form.showName === 'show' && !this.form.name) {
-        this.error = 'Nama wajib diisi jika tidak anonim.';
+      if (this.form.showName === "show" && !this.form.name) {
+        this.error = "Nama wajib diisi jika tidak anonim.";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
       }
       if (!this.form.phone_number) {
-        this.error = 'Nomor telepon wajib diisi.';
+        this.error = "Nomor telepon wajib diisi.";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
@@ -390,7 +474,8 @@ export default {
 
       // Validasi reCAPTCHA
       if (!window.grecaptcha) {
-        this.error = 'reCAPTCHA tidak tersedia. Silakan refresh halaman atau cek koneksi internet Anda.';
+        this.error =
+          "reCAPTCHA tidak tersedia. Silakan refresh halaman atau cek koneksi internet Anda.";
         this.showErrorAlert(this.error);
         this.loading = false;
         return;
@@ -406,32 +491,44 @@ export default {
 
       try {
         const formData = new FormData();
-        formData.append('campaign_id', this.form.campaign_id);
-        formData.append('amount', this.form.amount);
-        formData.append('name', this.form.showName === 'hide' ? '' : this.form.name);
-        formData.append('phone_number', this.form.phone_number);
-        formData.append('is_anonymous', this.form.showName === 'hide' ? 1 : 0);
-        formData.append('proof_image', this.form.proof_image);
-        if (this.form.message) formData.append('message', this.form.message);
+        formData.append("campaign_id", this.form.campaign_id);
+        formData.append("amount", this.form.amount);
+        formData.append(
+          "name",
+          this.form.showName === "hide" ? "" : this.form.name
+        );
+        formData.append("phone_number", this.form.phone_number);
+        formData.append("is_anonymous", this.form.showName === "hide" ? 1 : 0);
+        formData.append("proof_image", this.form.proof_image);
+        if (this.form.message) formData.append("message", this.form.message);
 
-        console.log('Submitting donation with campaign_id:', this.form.campaign_id);
+        console.log(
+          "Submitting donation with campaign_id:",
+          this.form.campaign_id
+        );
 
-        const response = await axios.post('https://masjid.uika-bogor.ac.id/backend/api/donations', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const response = await axios.post(
+          "https://masjid.uika-bogor.ac.id/backend/api/donations",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
 
-        if (response.data.status === 'success') {
-          this.success = response.data.message || 'Donasi berhasil dikirim!';
+        if (response.data.status === "success") {
+          this.success = response.data.message || "Donasi berhasil dikirim!";
           this.showSuccessAlert(this.success);
           this.resetForm();
           window.grecaptcha.reset();
         } else {
-          this.error = response.data.message || 'Gagal mengirim donasi';
+          this.error = response.data.message || "Gagal mengirim donasi";
           this.showErrorAlert(this.error);
         }
       } catch (err) {
-        console.error('Error submitting donation:', err);
-        this.error = err.response?.data?.message || 'Gagal mengirim donasi: ' + err.message;
+        console.error("Error submitting donation:", err);
+        this.error =
+          err.response?.data?.message ||
+          "Gagal mengirim donasi: " + err.message;
         this.showErrorAlert(this.error);
       } finally {
         this.loading = false;
@@ -441,13 +538,13 @@ export default {
       this.form = {
         campaign_id: this.campaign.id,
         amount: 50000,
-        customAmount: '',
-        name: '',
-        phone_number: '',
-        showName: 'show',
+        customAmount: "",
+        name: "",
+        phone_number: "",
+        showName: "show",
         proof_image: null,
-        paymentMethod: 'Transfer Bank',
-        message: '',
+        paymentMethod: "Transfer Bank",
+        message: "",
       };
       this.showQRISModal = false;
     },
