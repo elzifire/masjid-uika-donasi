@@ -4,6 +4,7 @@ import CampaignList from '../components/donation/CampaignList.vue';
 import CampaignDetail from '../components/donation/CampaignDetail.vue';
 import DonationForm from '../components/donation/DonationForm.vue';
 import DonationList from '../components/donation/DonationList.vue';
+import Auth from '../views/auth/Auth.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -11,6 +12,7 @@ const routes = [
   { path: '/kampanye/:id', name: 'CampaignDetail', component: CampaignDetail },
   { path: '/donasi', name: 'DonationForm', component: DonationForm },
   { path: '/list-donasi', name: 'DonationList', component: DonationList },
+  { path: '/auth', name: 'Auth', component: Auth },
 ];
 
 const router = createRouter({

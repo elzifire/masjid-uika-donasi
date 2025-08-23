@@ -12,7 +12,7 @@
           {{ error }}
         </div>
 
-        <!-- Pilih Kampanye (Readonly / Prefill) -->
+        <!-- Pilih Kampanye -->
         <div>
           <label class="block text-sm font-medium mb-1">Kampanye</label>
           <input
@@ -53,7 +53,6 @@
             >Informasi Pribadi</label
           >
 
-          <!-- Input nama hanya muncul kalau pilih show -->
           <input
             v-if="form.showName === 'show'"
             v-model="form.name"
@@ -62,7 +61,6 @@
             class="w-full border rounded p-2 mb-2"
           />
 
-          <!-- Input telepon tetap -->
           <input
             v-model="form.phone_number"
             type="tel"
@@ -70,7 +68,6 @@
             class="w-full border rounded p-2 mb-2"
           />
 
-          <!-- Radio pilihan -->
           <div class="flex items-center gap-4 mt-2">
             <label class="flex items-center gap-2">
               <input v-model="form.showName" type="radio" value="show" />
@@ -120,14 +117,14 @@
             class="bg-teal-50 rounded-lg p-4 border border-teal-200 mb-4"
           >
             <div class="flex items-center mb-3">
-              <i class="fas fa-wallet text-green-800 text-xl mr-2"></i>
+              <i class="bx bx-wallet text-green-800 text-xl mr-2"></i>
               <span class="text-lg font-bold text-green-800"
                 >Silahkan transfer ke:</span
               >
             </div>
             <div class="mb-3">
               <div class="flex items-center mb-2">
-                <i class="fas fa-credit-card text-gray-600 text-lg mr-2"></i>
+                <i class="bx bx-credit-card text-gray-600 text-lg mr-2"></i>
                 <div class="flex-1">
                   <div class="text-sm font-semibold text-gray-800">
                     A/n Masjid Ibn Khaldun UIKA
@@ -140,13 +137,13 @@
                       @click="copyToClipboard('7182845428')"
                       class="text-green-800 hover:text-green-600"
                     >
-                      <i class="fas fa-copy text-lg"></i>
+                      <i class="bx bx-copy text-lg"></i>
                     </button>
                   </div>
                 </div>
               </div>
               <div class="flex items-center">
-                <i class="fas fa-credit-card text-gray-600 text-lg mr-2"></i>
+                <i class="bx bx-credit-card text-gray-600 text-lg mr-2"></i>
                 <div class="flex-1">
                   <div class="text-sm font-semibold text-gray-800">
                     A/n Masjid Ibn Khaldun Muslimah Center
@@ -159,7 +156,7 @@
                       @click="copyToClipboard('7307978797')"
                       class="text-green-800 hover:text-green-600"
                     >
-                      <i class="fas fa-copy text-lg"></i>
+                      <i class="bx bx-copy text-lg"></i>
                     </button>
                   </div>
                 </div>
@@ -177,7 +174,7 @@
               @click="showQRISModal = true"
               class="flex items-center justify-center bg-teal-50 rounded-lg p-4 border border-teal-200 hover:bg-teal-100 transition"
             >
-              <i class="fas fa-qrcode text-green-800 text-xl mr-2"></i>
+              <i class="bx bx-qr text-green-800 text-xl mr-2"></i>
               <span class="text-sm font-semibold text-green-800"
                 >Klik untuk melihat kode QRIS</span
               >
@@ -223,7 +220,7 @@
               @click="showQRISModal = false"
               class="text-gray-600 hover:text-gray-800"
             >
-              <i class="fas fa-times text-lg"></i>
+              <i class="bx bx-x text-lg"></i>
             </button>
           </div>
           <img

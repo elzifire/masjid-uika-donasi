@@ -4,10 +4,12 @@
       <div class="flex h-16 items-center justify-between">
         
         <!-- Logo kiri -->
+         <router-link to="/">
         <div class="flex items-center">
           <img src="/images/masjid-uika-logo.png" alt="MASJID UIKA" class="h-10 w-auto" />
           <h1 class="ml-2 text-xl font-bold">MASJID UIKA</h1>
         </div>
+        </router-link>
 
         <!-- Menu tengah (desktop) -->
         <div class="hidden sm:flex flex-1 justify-center space-x-4">
