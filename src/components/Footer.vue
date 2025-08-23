@@ -59,45 +59,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import FooterController from './FooterController.js';
+import FooterController from '../controllers/FooterController';
 
 export default {
-  props: {
-    categoriesFromParent: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      categories: this.categoriesFromParent,
-      loadingCategories: false,
-      errorCategories: null,
-    };
-  },
-  mounted() {
-    if (!this.categoriesFromParent.length) {
-      this.fetchCategories();
-    } else {
-      this.categories = this.categoriesFromParent;
-    }
-  },
-  methods: {
-    async fetchCategories() {
-      this.loadingCategories = true;
-      try {
-        const response = await axios.get('https://masjid.uika-bogor.ac.id/backend/api/categories/donations');
-        if (response.data.status === 'success') {
-          this.categories = response.data.data;
-        } else {
-          this.errorCategories = 'Gagal memuat kategori';
-        }
-      } catch (error) {
-        this.errorCategories = 'Gagal memuat kategori: ' + error.message;
-      } finally {
-        this.loadingCategories = false;
-      }
-    },
-  },
+  ...FooterController,
 };
 </script>

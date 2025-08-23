@@ -13,7 +13,7 @@
           <div class="relative h-64 md:h-72">
             <img 
               v-if="campaign.image" 
-              :src="campaign.image.startsWith('http') ? campaign.image : `https://masjid.uika-bogor.ac.id/backend/${campaign.image}`" 
+              :src="campaign.image" 
               alt="Gambar Kampanye" 
               class="w-full h-full object-cover"
             />
@@ -61,41 +61,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import FeaturedCampaignController from './FeaturedCampaignController.js';
+import CampaignController from '../../controllers/CampaignController';
 
 export default {
-  data() {
-    return {
-      campaigns: [],
-      loading: false,
-      error: null,
-    };
-  },
-  mounted() {
-    this.fetchCampaigns();
-  },
-  methods: {
-    async fetchCampaigns() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const response = await axios.get('https://masjid.uika-bogor.ac.id/backend/api/homepage/donations');
-        if (response.data.status === 'success') {
-          this.campaigns = response.data.data.map(campaign => ({
-            ...campaign,
-            tags: campaign.category ? [campaign.category] : [],
-            description: campaign.description || campaign.title,
-            image: campaign.image?.startsWith('http') ? campaign.image : campaign.image ? `https://masjid.uika-bogor.ac.id/backend/${campaign.image}` : null
-          }));
-        } else {
-          this.error = 'Gagal memuat kampanye';
-        }
-      } catch (err) {
-        this.error = 'Gagal memuat kampanye: ' + err.message;
-      } finally {
-        this.loading = false;
-      }
-    },
-  },
+  ...CampaignController,
 };
 </script>

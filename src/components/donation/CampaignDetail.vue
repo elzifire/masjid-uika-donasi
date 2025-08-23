@@ -83,79 +83,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import CampaignDetailController from '../../controllers/CampaignDetailController';
 
 export default {
-  data() {
-    return {
-      campaign: {
-        id: null,
-        image: null,
-        urgent: false,
-        tags: [],
-        title: "",
-        description: "",
-        goal_amount: 0,
-        total_collected: 0,
-        goal_amount_formatted: "0",
-        total_collected_formatted: "0",
-        progress: 0,
-        donors: 0,
-        daysLeft: 0,
-      },
-      loading: false,
-      error: null,
-    };
-  },
-  mounted() {
-    this.fetchCampaignDetail();
-  },
-  methods: {
-    async fetchCampaignDetail() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const campaignId = this.$route.params.id;
-        const response = await axios.get(
-          `https://masjid.uika-bogor.ac.id/backend/api/donation/${campaignId}`
-        );
-        if (response.data.status === "success") {
-          const data = response.data.data;
-
-          // Hitung progress & daysLeft
-          const totalCollected = parseFloat(data.total_collected);
-          const goalAmount = parseFloat(data.goal_amount);
-          const progress = goalAmount
-            ? ((totalCollected / goalAmount) * 100).toFixed(2)
-            : 0;
-          const daysLeft = data.expired
-            ? Math.max(
-                0,
-                Math.ceil(
-                  (new Date(data.expired) - new Date()) / (1000 * 60 * 60 * 24)
-                )
-              )
-            : 0;
-
-          this.campaign = {
-            ...data,
-            tags: data.category_id ? [data.category_id] : [],
-            total_collected: totalCollected,
-            goal_amount: goalAmount,
-            progress,
-            daysLeft,
-            donors: data.donors || 0,
-            urgent: data.urgent || daysLeft <= 7 || progress >= 80,
-          };
-        } else {
-          this.error = "Kampanye tidak ditemukan";
-        }
-      } catch (err) {
-        this.error = "Gagal memuat detail kampanye: " + err.message;
-      } finally {
-        this.loading = false;
-      }
-    },
-  },
+  ...CampaignDetailController,
 };
 </script>

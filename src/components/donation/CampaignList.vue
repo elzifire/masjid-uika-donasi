@@ -34,7 +34,7 @@
           class="bg-white border rounded-lg shadow hover:shadow-lg transition duration-300"
         >
           <img
-            :src="campaign.image ? baseUrl + campaign.image : 'https://via.placeholder.com/300x200'"
+            :src="campaign.image ? 'https://masjid.uika-bogor.ac.id/backend' + campaign.image : 'https://via.placeholder.com/300x200'"
             alt="Gambar Kampanye"
             class="w-full h-48 object-cover rounded-t-lg"
           />
@@ -46,8 +46,6 @@
               {{ campaign.category }}
             </span>
             <h3 class="text-lg font-semibold mt-1 truncate">{{ campaign.title }}</h3>
-            <!-- <p class="text-gray-600 text-sm mt-1 truncate">{{ campaign.title }}</p> -->
-
             <div class="mt-4">
               <p class="text-sm font-medium">
                 Rp {{ campaign.total_collected_formatted }} dari Rp {{ campaign.goal_amount_formatted }}
@@ -62,7 +60,6 @@
               <p class="text-xs text-gray-500">{{ campaign.donors }} Donatur</p>
               <p class="text-xs text-gray-500">{{ campaign.daysLeft }} Hari Lagi</p>
             </div>
-
             <router-link
               :to="{ name: 'CampaignDetail', params: { id: campaign.id } }"
               class="block mt-4 bg-green-600 text-white px-4 py-2 rounded text-center hover:bg-green-700 transition"
@@ -96,131 +93,10 @@
 </template>
 
 <script>
-import axios from "axios";
+// import CampaignController from './CampaignController.js';
+import CampaignListController from '../../controllers/CampaignListController';
 
 export default {
-  data() {
-    return {
-      campaigns: [],
-      categories: [],
-      loading: false,
-      error: null,
-      searchQuery: "",
-      selectedCategory: this.$route.query.category || "",
-      currentPage: 1,
-      lastPage: 1,
-      perPage: 6,
-      baseUrl: "https://masjid.uika-bogor.ac.id/backend", // base URL backend
-    };
-  },
-  computed: {
-    filteredCampaigns() {
-      let filtered = this.campaigns;
-      if (this.searchQuery) {
-        filtered = filtered.filter((campaign) =>
-          campaign.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-      if (this.selectedCategory) {
-        filtered = filtered.filter(
-          (campaign) => campaign.category === this.selectedCategory
-        );
-      }
-      return filtered;
-    },
-  },
-  watch: {
-    selectedCategory(newCategory) {
-      this.$router.push({
-        path: "/kampanye",
-        query: { category: newCategory || undefined },
-      });
-      this.currentPage = 1;
-      this.fetchCampaigns();
-    },
-    "$route.query.category"(newCategory) {
-      this.selectedCategory = newCategory || "";
-      this.currentPage = 1;
-      this.fetchCampaigns();
-    },
-  },
-  mounted() {
-    this.fetchCategories();
-    this.fetchCampaigns();
-  },
-  methods: {
-    async fetchCategories() {
-      try {
-        const res = await axios.get(
-          "https://masjid.uika-bogor.ac.id/backend/api/categories/donations"
-        );
-        if (res.data.status === "success") this.categories = res.data.data;
-      } catch (error) {
-        this.error = "Gagal memuat kategori: " + error.message;
-      }
-    },
-    async fetchCampaigns() {
-      this.loading = true;
-      try {
-        const params = { page: this.currentPage, per_page: this.perPage };
-        if (this.selectedCategory) params.category = this.selectedCategory;
-
-        const res = await axios.get(
-          "https://masjid.uika-bogor.ac.id/backend/api/donations",
-          { params }
-        );
-        if (res.data.status === "success") {
-          this.campaigns = res.data.data.map((campaign) => ({
-            ...campaign,
-            progress: campaign.goal_amount
-              ? (
-                  (parseFloat(campaign.total_collected) /
-                    parseFloat(campaign.goal_amount)) *
-                  100
-                ).toFixed(2)
-              : 0,
-            daysLeft: campaign.expired
-              ? Math.max(
-                  0,
-                  Math.ceil(
-                    (new Date(campaign.expired) - new Date()) /
-                      (1000 * 60 * 60 * 24)
-                  )
-                )
-              : 0,
-            urgent:
-              (campaign.expired &&
-                Math.ceil(
-                  (new Date(campaign.expired) - new Date()) /
-                    (1000 * 60 * 60 * 24)
-                ) <= 7) ||
-              (campaign.goal_amount &&
-                (parseFloat(campaign.total_collected) /
-                  parseFloat(campaign.goal_amount)) *
-                  100 >=
-                  80),
-          }));
-          this.currentPage = res.data.current_page || 1;
-          this.lastPage = res.data.last_page || 1;
-        }
-      } catch (error) {
-        this.error = "Gagal memuat kampanye: " + error.message;
-      } finally {
-        this.loading = false;
-      }
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchCampaigns();
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.lastPage) {
-        this.currentPage++;
-        this.fetchCampaigns();
-      }
-    },
-  },
+  ...CampaignListController,
 };
 </script>

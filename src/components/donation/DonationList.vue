@@ -36,33 +36,6 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      donations: [
-        // Data statis karena API belum nyediain endpoint daftar donasi
-        {
-          id: 1,
-          name: 'Budi Santoso',
-          campaign: 'Bangun Perpustakaan untuk Desa Terpencil',
-          amount: 500000,
-          date: '2025-08-15',
-          paymentMethod: 'Transfer Bank',
-        },
-        {
-          id: 2,
-          name: 'Siti Rahayu (Anonim)',
-          campaign: 'Pengobatan Gratis untuk Lansia',
-          amount: 250000,
-          date: '2025-08-14',
-          paymentMethod: 'E-Wallet',
-        },
-        {
-          id: 3,
-          name: 'Ahmad Fauzi',
-          campaign: 'Bantuan Korban Banjir Bandang',
-          amount: 1000000,
-          date: '2025-08-13',
-          paymentMethod: 'QRIS',
-        },
-      ],
       loading: false,
       error: null,
     };
