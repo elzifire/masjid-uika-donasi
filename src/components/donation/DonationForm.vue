@@ -25,7 +25,7 @@
 
         <!-- Jumlah Donasi -->
         <div>
-          <label class="block text-sm font-medium mb-1">Jumlah Donasi</label>
+          <label class="block text-sm font-medium mb-1">Nominal Donasi</label>
           <div class="flex flex-wrap gap-2 mb-2">
             <button
               type="button"
@@ -53,6 +53,17 @@
             >Informasi Pribadi</label
           >
 
+          <div class="flex items-center gap-4 mt-2">
+            <label class="flex items-center gap-2">
+              <input v-model="form.showName" type="radio" value="show" />
+              Tampilkan nama saya
+            </label>
+            <label class="flex items-center gap-2">
+              <input v-model="form.showName" type="radio" value="hide" />
+              Sembunyikan nama (Anonim)
+            </label>
+          </div>
+          
           <input
             v-if="form.showName === 'show'"
             v-model="form.name"
@@ -68,16 +79,7 @@
             class="w-full border rounded p-2 mb-2"
           />
 
-          <div class="flex items-center gap-4 mt-2">
-            <label class="flex items-center gap-2">
-              <input v-model="form.showName" type="radio" value="show" />
-              Tampilkan nama saya
-            </label>
-            <label class="flex items-center gap-2">
-              <input v-model="form.showName" type="radio" value="hide" />
-              Sembunyikan nama (Anonim)
-            </label>
-          </div>
+          
         </div>
 
         <!-- Bukti Transfer -->
